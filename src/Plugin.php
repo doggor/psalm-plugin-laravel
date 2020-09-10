@@ -36,9 +36,13 @@ class Plugin implements PluginEntryPointInterface
 
         $cache_dir = __DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
 
+        \ob_start();
+
         $this->ingestFacadeStubs($registration, $app, $fake_filesystem, $view_factory, $cache_dir);
         $this->ingestMetaStubs($registration, $app, $fake_filesystem, $view_factory, $cache_dir);
         $this->ingestModelStubs($registration, $app, $fake_filesystem, $cache_dir);
+
+        \ob_end_clean();
 
         require_once 'ReturnTypeProvider/AuthReturnTypeProvider.php';
         $registration->registerHooksFromClass(ReturnTypeProvider\AuthReturnTypeProvider::class);
@@ -137,7 +141,7 @@ class Plugin implements PluginEntryPointInterface
             new \Symfony\Component\Console\Input\ArrayInput([]),
             new \Symfony\Component\Console\Output\NullOutput()
         );
-        
+
         $registration->addStubFile($cache_dir . 'meta.stubphp');
     }
 
